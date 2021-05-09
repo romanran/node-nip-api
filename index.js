@@ -11,20 +11,22 @@ const gus = Client.createClient({
         apiKey: 'ANTIGATE_API',
     },
 })
-
-app.get('/findByNip/:NIP', async (req, res) => {
-    res.setHeader('Content-Type', 'application/json')
-    const NIP = req.params.NIP
+app.get('/', (request, response) => {
+    return response.send('OK')
+})
+app.get('/findByNip/:NIP', async (request, response) => {
+    response.setHeader('Content-Type', 'application/json')
+    const NIP = request.params.NIP
     if (!NIP) {
-        return res.send({ error: true, info: 'Empty NIP param' })
+        return response.send({ error: true, info: 'Empty NIP param' })
     }
     try {
         const data = await gus.findByNip(NIP)
-        return res.send(data)
+        return response.send(data)
     } catch (err) {
         console.warn(err)
-        return res.send(err.error)
+        return response.send(err.error)
     }
 })
 
-app.listen(80, () => console.log(`Api start`))
+app.listen(process.env.PORT || 8080, () => console.log(`Api start`))
